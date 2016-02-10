@@ -23,7 +23,7 @@ MStat <- function (freq) {
   return (m)
 }
 
-# Calculates Cho Gains' d
+# Calculates Cho-Gains' d Statistic
 DStat <- function (freq) {
   i <- 1:9
   d <- sqrt(sum(freq - log10(1 + (1 / i)))^2)
@@ -33,6 +33,8 @@ DStat <- function (freq) {
 # Takes in sample data from either a vector or matrix and displays the
 # m statistic, d statistic, or both depending on user input
 CalculatingViolations <- function (data, option=c("m","d","both")) {
+  colnames(data) <- c(1:9)
+  
   if (option == "m") {
     return (list(MStat(data), data))
   }
@@ -40,26 +42,28 @@ CalculatingViolations <- function (data, option=c("m","d","both")) {
     return (list(DStat(data), data))
   }
   if (option == "both") {
-    return (list("m" = MStat(data), "d" = DStat(data), data))
+    return (list("m" = MStat(data), "d" = DStat(data), "Data" = data))
   }
 }
 
 CalculatingViolations(test.matrix, "both")
 
 
-# Question 2
+## Question 2
 
+# Sets the parameters for the significance of a hyothesis test of the m or d
+# statistic with a null hypothesis of 'no fraud'
 SigLevel <- function (data) {
-  if (MStat(data) > 0.851 & MStat < 0.967) {
+  if (MStat(data) > 0.851 & MStat(data) < 0.967) {
     return ("*")
   }
-  if (DStat(data) > 1.212 & DStat < 1.330) {
+  if (DStat(data) > 1.212 & DStat(data) < 1.330) {
     return ("*")
   }
-  if (MStat(data) >= 0.967 & MStat < 1.212) {
+  if (MStat(data) >= 0.967 & MStat(data) < 1.212) {
     return ("**")
   }
-  if (DStat(data) >= 1.330 & DStat < 1.569) {
+  if (DStat(data) >= 1.330 & DStat(data) < 1.569) {
     return ("**")
   }
   if (MStat(data) >= 1.212) {
@@ -68,14 +72,20 @@ SigLevel <- function (data) {
   if (DStat(data) >= 1.569) {
     return ("***")
   }
+  else {
+    return ("Insignificant")
+  }
 }
 
+# Creates a table that shows the statistic, its significance, and a legend
+# explaining the different significance codes
 print.benfords <- function (data) {
-  m.stat <- c("   Leemis' m = ", MStat(data) + SigLevel(data))
-  d.stat <- c("Cho-Gains' d = ", DStat(data) + SigLevel(data))
-  significance <- c("Signif. codes:", "0.01 ‘***’ 0.05 ‘**’ 0.1 ‘*’")
-  table <- rbind(m.stat, d.stat, significance)
+  m.stat <- c("    Leemis' m = ", round(MStat(data), 2), SigLevel(data))
+  d.stat <- c(" Cho-Gains' d = ", round(DStat(data), 2), SigLevel(data))
+  sig.codes <- c("Signif. codes:","", "0.01 ‘***’ 0.05 ‘**’ 0.1 ‘*’")
+  table <- rbind(m.stat, d.stat, sig.codes)
   return (table)
 }
 
 print.benfords(test.matrix)
+
