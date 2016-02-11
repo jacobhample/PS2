@@ -8,6 +8,7 @@
 
 ## Question 1
 
+#Creates a vector and matrix with identical data
 test.vector <- c(0.1, 0.08, 0.14, 0.16, 0.09, 0.13, 0.12, 0.07, 0.11)
 
 test.matrix <- matrix(
@@ -44,6 +45,8 @@ CalculatingViolations <- function (data, option=c("m","d","both")) {
   }
 }
 
+# Runs test.matrix through CaluclatingViolations, showing both the m
+# and d statistic
 CalculatingViolations(test.matrix, "both")
 
 
@@ -85,6 +88,7 @@ print.benfords <- function (data) {
   return (table)
 }
 
+# Runs test.matrix through print.benfords
 print.benfords(test.matrix)
 
 # Sets directory
@@ -97,4 +101,5 @@ FileSink <- function (data) {
   sink()
 }
 
+# Creates a csv file of the print.benfords table using the data from test.matrix
 FileSink(test.matrix)
