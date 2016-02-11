@@ -33,8 +33,6 @@ DStat <- function (freq) {
 # Takes in sample data from either a vector or matrix and displays the
 # m statistic, d statistic, or both depending on user input
 CalculatingViolations <- function (data, option=c("m","d","both")) {
-  colnames(data) <- c(1:9)
-  
   if (option == "m") {
     return (list(MStat(data), data))
   }
@@ -89,3 +87,14 @@ print.benfords <- function (data) {
 
 print.benfords(test.matrix)
 
+# Sets directory
+setwd("/Users/Jacob/Google Drive/Senior Year/Spring 2016/Statistical Programming/Problem Sets")
+
+# Creates a csv file and diverts the output of print.benfords() into it
+FileSink <- function (data) {
+  sink(file = "BenfordsTable.csv")
+  print.table(print.benfords(data))
+  sink()
+}
+
+FileSink(test.matrix)
